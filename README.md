@@ -8,45 +8,42 @@ Integration details
 > * Install kernel headers for your oS
 > * Ubuntu/Debian
 
-> apt install linux-headers-$(uname -r)
+>         apt install linux-headers-$(uname -r)
 
 > * CentOS/RHEL 7
 
-> yum install kernel-devel 
-> yum install kernel-headers
+>         yum install kernel-devel 
+>         yum install kernel-headers
 
 > * CentOS/RHEL8
 
-> dnf install kernel-devel
-> dnf install kernel-headers
+>         dnf install kernel-devel
+>         dnf install kernel-headers
 
 > * Raspbian
 
-> apt-get install raspberrypi-kernel-headers
+>         apt-get install raspberrypi-kernel-headers
 
 > * Load the industrialio 
 
-> modprobe industrialio
+>         modprobe industrialio
 
 > * Get the code
 
-> gh repo clone DreadlordGG/LPS25HB-driver
+>         gh repo clone DreadlordGG/LPS25HB-driver
 
 > * Make
 
-> Make
-> insmod lps25hb.ko
+>          Make
+
+> * Load
+>         insmod lps25hb.ko
 
 > * Instantiate device
 
-> echo lps25hb 0x5d > /sys/bus/i2c/devices/<i2c bus>/new_device # ex. echo lps25hb 0x5d > /sys/bus/i2c/devices/i2c-1/new_device
+>         echo lps25hb 0x5d > /sys/bus/i2c/devices/<i2c bus>/new_device # ex. echo lps25hb 0x5d > /sys/bus/i2c/devices/i2c-1/new_device
 
 > * To remove the driver and the device
 
-> echo 0x5D > /sys/bus/i2c/devices/<i2c bus>/delete_device
-> rmmod lps25hb
-
-
-> * Edit related Makefile (e.g. *drivers/iio/imu/Makefile*) adding the following line:
-
->         obj-y += lsm6dsm/
+>         /sys/bus/i2c/devices/<i2c bus>/delete_device
+>         rmmod lps25hb
