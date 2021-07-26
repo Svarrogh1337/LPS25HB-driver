@@ -1,6 +1,6 @@
 # Kernel driver for LPS25HB Barometric Pressure and Temperature Sensors
 [LPS25HB Datasheet](https://www.pololu.com/file/0J1466/LPS25HB.pdf)
-
+# Pressure readings are WiP
 Integration details
 =====================
 ### Source code integration
@@ -56,3 +56,5 @@ Integration details
 
 >         /sys/bus/i2c/devices/<i2c bus>/delete_device
 >         rmmod lps25hb
+
+
