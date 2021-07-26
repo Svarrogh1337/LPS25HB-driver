@@ -45,3 +45,8 @@ Integration details
 
 > echo 0x5D > /sys/bus/i2c/devices/<i2c bus>/delete_device
 > rmmod lps25hb
+
+
+> * Edit related Makefile (e.g. *drivers/iio/imu/Makefile*) adding the following line:
+
+>         obj-y += lsm6dsm/
