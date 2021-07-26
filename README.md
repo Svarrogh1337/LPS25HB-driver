@@ -32,17 +32,26 @@ Integration details
 
 >         gh repo clone DreadlordGG/LPS25HB-driver
 
-> * Make
+> * Make the driver
 
 >          Make
 
-> * Load
+> * Load the driver
+
 >         insmod lps25hb.ko
 
 > * Instantiate device
 
 >         echo lps25hb 0x5d > /sys/bus/i2c/devices/<i2c bus>/new_device # ex. echo lps25hb 0x5d > /sys/bus/i2c/devices/i2c-1/new_device
 
+> * Read the raw temperature, temperature offset and temperature scale
+
+>         cat /sys/bus/iio/devices/iio\:device0/in_temp_raw /sys/bus/iio/devices/iio\:device0/in_temp_offset /sys/bus/iio/devices/iio\:device0/in_temp_scale
+
+> * To get the temperature in C the formula is:
+
+>         (int_temp_raw / int_temp_scale) + int_temp_offset
+    
 > * To remove the driver and the device
 
 >         /sys/bus/i2c/devices/<i2c bus>/delete_device
