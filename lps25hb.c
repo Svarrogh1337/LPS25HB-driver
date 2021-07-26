@@ -19,18 +19,14 @@
 #define LPS25HB_SLAVE_ADDRESS_2 0x5C            /* LPS25GB address with pull down */
 #define LPS25HB_READ_REG        0x80     
 #define LPS25HB_TEMP_SCALE      480
-#define LPS25HB_TEMP_OFFSET     42.58
-#define LPS25HB_TEMP_OUT        0x2B
+#define LPS25HB_TEMP_OFFSET     42.50
+#define LPS25HB_TEMP_OUT_H      0x2C
+#define LPS25HB_TEMP_OUT_L      0x2B
 #define LPS25HB_PRESS_OUT       0x2
 
 struct lps25hb_priv {
 	struct i2c_client	*client;
 	struct mutex		lock;
-	struct gpio_desc	*xclr_gpio;
-
-	struct i2c_client	*eeprom_client;
-	struct regmap		*eeprom_regmap;
-
 	s32			pressure;	
 	s32			temp;		
 };
@@ -51,8 +47,10 @@ static const struct iio_chan_spec lps25hb_channels[] = {
 
 static int lps25hb_get_temp_pressure(struct lps25hb_priv *priv)
 {
-	int ret;
-        ret = i2c_smbus_read_word_data(priv->client,LPS25HB_TEMP_OUT | LPS25HB_READ_REG  ); 
+	uint16_t ret;
+	const int temp_l = i2c_smbus_read_word_data(priv->client,LPS25HB_TEMP_OUT_L | LPS25HB_READ_REG  );
+	const int temp_h = i2c_smbus_read_word_data(priv->client,LPS25HB_TEMP_OUT_H | LPS25HB_READ_REG  ); 
+	ret = (temp_h << 8) | temp_l;
 	return ret;
 	
 	}
@@ -62,17 +60,19 @@ static int lps25hb_read_raw(struct iio_dev *indio_dev,
 			 int *val, int *val2, long mask)
 {
 	/* Pressure channel is still WiP */
+	uint16_t raw;
 	struct lps25hb_priv *priv = iio_priv(indio_dev);
 	mutex_lock(&priv->lock);
-	int16_t raw = lps25hb_get_temp_pressure(priv);
-        priv->temp = raw; 
+	raw = lps25hb_get_temp_pressure(priv);
         mutex_unlock(&priv->lock);
+	priv->temp = raw; 
 	switch (mask) {
 	case IIO_CHAN_INFO_OFFSET:
 		switch (chan->type) {
                 case IIO_TEMP:
+			/* Switch to float when available, for now it's useless. */
                         *val = LPS25HB_TEMP_OFFSET;
-                        return IIO_VAL_INT;
+                        return IIO_VAL_INT;  
                 default:
                         return -EINVAL;
                 }

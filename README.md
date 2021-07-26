@@ -54,7 +54,7 @@ Integration details
     
 > * To remove the driver and the device
 
->         /sys/bus/i2c/devices/<i2c bus>/delete_device
+>         echo 0x5d > /sys/bus/i2c/devices/<i2c bus>/delete_device
 >         rmmod lps25hb
 
 
