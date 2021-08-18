@@ -45,7 +45,7 @@ static const struct iio_chan_spec lps25hb_channels[] = {
 	},
 };
 
-static int lps25hb_get_temp_pressure(struct lps25hb_priv *priv)
+static int lps25hb_get_temp(struct lps25hb_priv *priv)
 {
 	uint16_t ret;
 	const int temp_l = i2c_smbus_read_word_data(priv->client,LPS25HB_TEMP_OUT_L | LPS25HB_READ_REG  );
@@ -63,7 +63,7 @@ static int lps25hb_read_raw(struct iio_dev *indio_dev,
 	uint16_t raw;
 	struct lps25hb_priv *priv = iio_priv(indio_dev);
 	mutex_lock(&priv->lock);
-	raw = lps25hb_get_temp_pressure(priv);
+	raw = lps25hb_get_temp(priv);
         mutex_unlock(&priv->lock);
 	priv->temp = raw; 
 	switch (mask) {
